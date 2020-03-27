@@ -20,6 +20,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class FragmentB extends Fragment {
     Context mainActivityContext;
@@ -77,6 +79,10 @@ public class FragmentB extends Fragment {
                 myNames.add(name);
                 nameAddressRatings.add(new NameAddressRating(name, address, rating));
             }
+
+            Collections.sort(nameAddressRatings);
+            Collections.reverse(nameAddressRatings);
+
             RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
             RecyclerView.Adapter adapter = new MyAdapter(getContext(), myNames, nameAddressRatings);
             recyclerView.setAdapter(adapter);

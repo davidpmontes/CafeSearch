@@ -35,8 +35,8 @@ public class MyAdapter extends RecyclerView.Adapter<CustomViewHolder> {
     public void onBindViewHolder(@NonNull CustomViewHolder holder, final int position) {
         //holder.listItem.setText(myList.get(position));
         holder.listItemName.setText(myNAR.get(position).name);
-        holder.listItemAddress.setText(myNAR.get(position).address);
-        holder.listItemRating.setText(String.valueOf(myNAR.get(position).rating));
+        holder.listItemAddress.setText("Address: " + myNAR.get(position).address);
+        holder.listItemRating.setText("Rating: " + String.valueOf(myNAR.get(position).rating));
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
