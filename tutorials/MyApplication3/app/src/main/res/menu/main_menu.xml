@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="Home" />
+
+        <item
+            android:id="@+id/nav_cafes"
+            android:title="Cafes" />
+
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item android:title="Profile">
+
+            <menu>
+                <item
+                    android:id="@+id/nav_A"
+                    android:title="A"></item>
+
+                <item
+                    android:id="@+id/nav_B"
+                    android:title="B"></item>
+
+                <item
+                    android:id="@+id/nav_C"
+                    android:title="C"></item>
+            </menu>
+        </item>
+
+
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_D"
+                android:title="D"
+                />
+            <item
+                android:id="@+id/nav_E"
+                android:title="E"
+                />
+        </menu>
+    </item>
+</menu>
