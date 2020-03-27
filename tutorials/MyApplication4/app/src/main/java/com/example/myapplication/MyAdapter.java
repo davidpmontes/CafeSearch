@@ -6,21 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<CustomViewHolder> {
-    private ArrayList<String> myList = new ArrayList<>();
+    //private ArrayList<String> myList = new ArrayList<>();
+    private ArrayList<NameAddressRating> myNAR = new ArrayList<>();
     private Context context;
 
-    public MyAdapter(Context context, ArrayList<String> myList) {
-        this.myList = myList;
+    public MyAdapter(Context context, ArrayList<String> myList, ArrayList<NameAddressRating> myNAR) {
+        //this.myList = myList;
+        this.myNAR = myNAR;
         this.context = context;
     }
 
@@ -34,7 +33,11 @@ public class MyAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, final int position) {
-        holder.listItem.setText(myList.get(position));
+        //holder.listItem.setText(myList.get(position));
+        holder.listItemName.setText(myNAR.get(position).name);
+        holder.listItemAddress.setText(myNAR.get(position).address);
+        holder.listItemRating.setText(String.valueOf(myNAR.get(position).rating));
+
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,17 +48,21 @@ public class MyAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 
     @Override
     public int getItemCount() {
-        return myList.size();
+        return myNAR.size();
     }
 }
 
 class CustomViewHolder extends RecyclerView.ViewHolder {
-    TextView listItem;
+    TextView listItemName;
+    TextView listItemAddress;
+    TextView listItemRating;
     RelativeLayout parentLayout;
 
     public CustomViewHolder(@NonNull View itemView) {
         super(itemView);
-        listItem = itemView.findViewById(R.id.item_name);
+        listItemName = itemView.findViewById(R.id.item_name);
+        listItemAddress = itemView.findViewById(R.id.item_address);
+        listItemRating = itemView.findViewById(R.id.item_rating);
         parentLayout = itemView.findViewById(R.id.parent_layout);
     }
 }

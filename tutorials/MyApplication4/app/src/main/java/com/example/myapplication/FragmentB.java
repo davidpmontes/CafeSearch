@@ -25,6 +25,7 @@ public class FragmentB extends Fragment {
     Context mainActivityContext;
 
     private ArrayList<String> myNames = new ArrayList<>();
+    private ArrayList<NameAddressRating> nameAddressRatings = new ArrayList<>();
 
     private View view;
 
@@ -53,8 +54,9 @@ public class FragmentB extends Fragment {
     public void clearRecyclerView()
     {
         myNames.clear();
+        nameAddressRatings.clear();
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        RecyclerView.Adapter adapter = new MyAdapter(getContext(), myNames);
+        RecyclerView.Adapter adapter = new MyAdapter(getContext(), myNames, nameAddressRatings);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -62,15 +64,21 @@ public class FragmentB extends Fragment {
     public void updateRecyclerView(JSONArray resultsArray)
     {
         myNames.clear();
+        nameAddressRatings.clear();
 
         try{
             for (int i = 0; i < resultsArray.length(); i++)
             {
                 JSONObject jsonObject = resultsArray.getJSONObject(i);
-                myNames.add(jsonObject.getString("name"));
+                String name = jsonObject.getString("name");
+                String address = jsonObject.getString("vicinity");
+                float rating = Float.valueOf(jsonObject.getString("rating"));
+
+                myNames.add(name);
+                nameAddressRatings.add(new NameAddressRating(name, address, rating));
             }
             RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-            RecyclerView.Adapter adapter = new MyAdapter(getContext(), myNames);
+            RecyclerView.Adapter adapter = new MyAdapter(getContext(), myNames, nameAddressRatings);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }

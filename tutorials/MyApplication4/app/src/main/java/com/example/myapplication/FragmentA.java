@@ -181,7 +181,7 @@ public class FragmentA extends Fragment implements OnMapReadyCallback, LocationL
         }
         Location location = locationManager.getLastKnownLocation(providerInfo);
         latlngCurrent = new LatLng(location.getLatitude(), location.getLongitude());
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngCurrent, 12));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngCurrent, 15));
     }
 
     @Override
