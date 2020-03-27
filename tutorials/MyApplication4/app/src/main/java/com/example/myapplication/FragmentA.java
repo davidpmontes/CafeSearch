@@ -37,6 +37,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
@@ -55,8 +56,6 @@ public class FragmentA extends Fragment implements OnMapReadyCallback, LocationL
 
     CommunicationInterface callback;
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static final String MAPVIEW_BUNDLE_KEY = "MAPVIEW_BUNDLE_KEY";
 
     private MapView mMapView;
@@ -65,17 +64,12 @@ public class FragmentA extends Fragment implements OnMapReadyCallback, LocationL
     private GoogleApiClient client;
     private EditText mSearchText;
 
-    private String mParam1;
-    private String mParam2;
-
     public FragmentA() {
-        // Required empty public constructor
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         callback = (CommunicationInterface) getActivity();
     }
 
@@ -85,28 +79,14 @@ public class FragmentA extends Fragment implements OnMapReadyCallback, LocationL
         callback = (CommunicationInterface) getActivity();
     }
 
-    public static FragmentA newInstance(String param1, String param2) {
-        FragmentA fragment = new FragmentA();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_a, container, false);
         mMapView = view.findViewById(R.id.googlemap);
         mSearchText = view.findViewById(R.id.input_search);
@@ -180,7 +160,6 @@ public class FragmentA extends Fragment implements OnMapReadyCallback, LocationL
 
     @Override
     public void onMapReady(GoogleMap map) {
-        //map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
         googleMap = map;
         client = new GoogleApiClient.Builder(getContext())
                 .addApi(LocationServices.API)
@@ -224,26 +203,22 @@ public class FragmentA extends Fragment implements OnMapReadyCallback, LocationL
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
+    public void onLocationChanged(Location location) { }
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
+    public void onConnected(@Nullable Bundle bundle) { }
     @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
+    public void onConnectionSuspended(int i) { }
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) { }
 
     public void findPlaces() {
+        if (mSearchText.getText().length() == 0)
+        {
+            googleMap.clear();
+            callback.clearAll();
+            return;
+        }
+
         StringBuilder stringBuilder = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         stringBuilder.append("&location=" + latlngCurrent.latitude + "," + latlngCurrent.longitude);
         stringBuilder.append("&radius=" + 1000);
@@ -262,6 +237,26 @@ public class FragmentA extends Fragment implements OnMapReadyCallback, LocationL
 
     @Override
     public void processFinish(JSONArray resultsArray) {
-        callback.onResultsArray(resultsArray);
+        googleMap.clear();
+        try{
+            for (int i = 0; i < resultsArray.length(); i++)
+            {
+                JSONObject jsonObject = resultsArray.getJSONObject(i);
+                JSONObject locationObject = jsonObject.getJSONObject("geometry").getJSONObject("location");
+
+                Double lat = Double.valueOf(locationObject.getString("lat"));
+                Double lng = Double.valueOf(locationObject.getString("lng"));
+                String name = jsonObject.getString("name");
+
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(name));
+            }
+            callback.onResultsArray(resultsArray);
+            return;
+        }
+        catch(JSONException e) {
+            e.printStackTrace();
+        }
+
+        callback.clearAll();
     }
 }
